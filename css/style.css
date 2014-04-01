@@ -20,6 +20,15 @@ body {
     background: #8fa09b; /* Цвет фона шапки */
     color: #ffe; /* Цвет текста */
    }
+   ul.hr {
+    margin: 0; /* Обнуляем значение отступов */
+    padding: 4px; /* Значение полей */
+   }
+   ul.hr li {
+    display: inline; /* Отображать как строчный элемент */
+    border: 1px solid #000; /* Рамка вокруг текста */
+    padding: 3px; /* Поля вокруг текста */
+   }
    #sidebar {
     margin-top: 10px; 
     width: 200px; /* Ширина слоя */

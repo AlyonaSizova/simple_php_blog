@@ -6,15 +6,10 @@
 </head>
 <body>
 	<div id="container">
-   		<div id="header">Blog
-   			<ul class="hr">
-   				<li><a href="/login/exit">log out</a></li>
-  			</ul>
-  		</div>
+   		<div id="header">Blog</div>
    		<div id="sidebar">
    			<p><a href="/">Main</a></p>
     		<p><a href="/articles">Articles</a></p>
-    		<p><a href="/admin">Admin</a></p>
     </div>
     <div id="content">
     	<?php include 'application/views/'.$content_view; ?>

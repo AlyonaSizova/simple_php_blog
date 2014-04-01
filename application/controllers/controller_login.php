@@ -44,13 +44,13 @@ class Controller_login extends Controller
 				echo $admin;
 				echo $password;
 				$_SESSION['admin'] = 0;
-				$this->view->generate('login_view.php', 'template_view.php');
+				$this->view->generate('login_view.php', 'template_0.php');
  
 			}
 		}
 		else
 		{
-			$this->view->generate('login_view.php', 'template_view.php', $data);
+			$this->view->generate('login_view.php', 'template_0.php', $data);
 		}
 		
 		
@@ -66,7 +66,11 @@ class Controller_login extends Controller
         	header("Location:/login");
       	}
       	if (!isset($_POST["exit"])) {
-        	$this->view->generate('exit_view.php', 'template_view.php');
+      		if($_SESSION['admin'] == 1){
+        		$this->view->generate('exit_view.php', 'template_view.php', $data);
+      		}
+      		else    
+        		$this->view->generate('exit_view.php', 'template_0.php', $data);
       	}
       	else{
         	switch ($_POST["exit"]) {

@@ -13,8 +13,11 @@ class Controller_articles extends Controller
       if (!isset($_SESSION['admin'])) 
           $_SESSION['admin'] = 0;
       $data = $this->model_c->get_all();
-      $this->view->generate('articles_view.php', 'template_view.php', $data);  
-
+      if($_SESSION['admin'] == 1){
+        $this->view->generate('articles_view.php', 'template_view.php', $data);
+      }
+      else    
+        $this->view->generate('articles_view.php', 'template_0.php', $data);    
     }
 
     function action_show($index)
@@ -26,7 +29,11 @@ class Controller_articles extends Controller
       //$data = serialize($data);
     
       if ($data != "haha") {
-        $this->view->generate('show_article_view.php', 'template_view.php', $data);
+        if($_SESSION['admin'] == 1){
+          $this->view->generate('show_article_view.php', 'template_view.php', $data);
+        }
+        else    
+          $this->view->generate('show_article_view.php', 'template_0.php', $data);
       }
       else{
         header("Location:/articles/not_found");
@@ -40,7 +47,11 @@ class Controller_articles extends Controller
           $_SESSION['admin'] = 0;
       $tag = $this->model_c->test_data($tag);
       $data = $this->model_c->find_with_tag($tag);
-      $this->view->generate('articles_view.php', 'template_view.php', $data);
+      if($_SESSION['admin'] == 1){
+        $this->view->generate('articles_view.php', 'template_view.php', $data);
+      }
+      else    
+        $this->view->generate('articles_view.php', 'template_0.php', $data);
 
     }
     
@@ -78,9 +89,11 @@ class Controller_articles extends Controller
          $data["text"] = "";
          $data["title"] = "";
       }
-
-
+      if($_SESSION['admin'] == 1){
         $this->view->generate('articles_new_view.php', 'template_view.php', $data);
+      }
+      else    
+        $this->view->generate('articles_new_view.php', 'template_0.php', $data);
     } 
 
     function action_edit($index)
@@ -95,7 +108,11 @@ class Controller_articles extends Controller
       if (!isset($_POST["name"]) && !isset($_POST["text"])){
         $data = $this->model_c->find($index);
         if ($data) {
-          $this->view->generate('edit_article_view.php', 'template_view.php', $data);
+          if($_SESSION['admin'] == 1){
+            $this->view->generate('edit_article_view.php', 'template_view.php', $data);
+          }
+          else    
+            $this->view->generate('edit_article_view.php', 'template_0.php', $data);
         }
         else{
           header("Location:/articles/not_found)");
@@ -128,7 +145,11 @@ class Controller_articles extends Controller
         header("Location:/login");
       }
       if (!isset($_POST["delete"])) {
-        $this->view->generate('delete_article_view.php', 'template_view.php');
+        if($_SESSION['admin'] == 1){
+          $this->view->generate('delete_article_view.php', 'template_view.php', $data);
+        }
+        else    
+          $this->view->generate('delete_article_view.php', 'template_0.php', $data);
       }
       else{
         switch ($_POST["delete"]) {

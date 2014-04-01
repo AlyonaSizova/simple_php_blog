@@ -5,8 +5,12 @@ class Controller_Main extends Controller
     {
     	session_start();
     	if (!isset($_SESSION['admin'])) 
-    			$_SESSION['admin'] = 0;	
-        $this->view->generate('main_view.php', 'template_view.php');
+    			$_SESSION['admin'] = 0;
+    	if ($_SESSION['admin'] == 1) {
+    		$this->view->generate('main_view.php', 'template_view.php');		
+    	}
+    	else			
+        	$this->view->generate('main_view.php', 'template_0.php');
     }
 }
 ?>
