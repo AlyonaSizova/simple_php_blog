@@ -4,16 +4,16 @@
 <form action="" method="post" name="login_form">
 <table class="login">
 	<div>
-    	<label for="user-name">Ваше имя</label>
-    	<input type="text" id="user-name" name="name"/>
+    	<label for="name">Ваше имя</label>
+    	<input type="text" id="name" name="name" value=""/>
   	</div>
   	<div>
     	<label for="email">Email</label>
-    	<input type="mail" id="email"e name="email"/>
+    	<input type="mail" id="email"e name="email" value=""/>
   	</div>
   	<div>
-  		<label for="pass">Пароль</label>
-  		<input type="password" id"pass" name="password">
+  		<label for="password">Пароль</label>
+  		<input type="password" id"password" name="password" value="" >
   	</div>	
   	<div>
     	<input type="submit" value="Войти"/>

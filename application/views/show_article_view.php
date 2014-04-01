@@ -2,7 +2,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <div class="row">
 	<div class="col-md-8">
-	<h1><span class="header"><?php echo $title . "<br>";?></span></h1>
+	<h1><span class="header"><?php echo $title ?></span></h1>
 	<div> <?php echo $text . "<br>";?> </div>
 	<p> <?php echo $ts . "<br>";?> </p>
 	</div>
@@ -23,8 +23,6 @@
 foreach ($data['comment'] as $key => $value) {
 		extract($value);
 		echo $author . "<br>" . $comm . "<br><br>"; 
-		// echo "<a href=\"/articles/delete/$id\"><button>delete</button></a>";
-		// echo "<a href=\"/articles/edit/$id\"><button>edit</button></a><br>";
 	}
 ?>
 

@@ -1,4 +1,4 @@
-<?php //session_start(); 
+<?php 
 if ($_SESSION['admin'] == 1) {?>
 		<h1>Страница авторизации</h1>
 		<p>

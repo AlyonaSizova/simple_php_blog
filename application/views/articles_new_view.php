@@ -1,10 +1,10 @@
 
 <html>
-<style>
-.error {color: #FF0000;}
-.header {color: #FF0099;}
-</style>
-<body>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+
+ </head> 
 
 <?php if($title == "" && $text == "") { ?>
   <h2><span class="header">Заполните форму.</span></h2>
@@ -34,7 +34,4 @@ echo "Http req path: " . $req_path . "<br>";
 echo "Http req method: " . $_SERVER['REQUEST_METHOD'] . "<br>";
 ?>
 
-
-
-</body>
 </html>
