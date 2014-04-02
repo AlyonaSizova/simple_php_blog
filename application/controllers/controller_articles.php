@@ -17,7 +17,7 @@ class Controller_articles extends Controller
         $this->view->generate('articles_view.php', 'template_view.php', $data);
       }
       else    
-        $this->view->generate('articles_view.php', 'template_0.php', $data);    
+        $this->view->generate('articles_0.php', 'template_0.php', $data);    
     }
 
     function action_show($index)
@@ -48,10 +48,10 @@ class Controller_articles extends Controller
       $tag = $this->model_c->test_data($tag);
       $data = $this->model_c->find_with_tag($tag);
       if($_SESSION['admin'] == 1){
-        $this->view->generate('articles_view.php', 'template_view.php', $data);
+        $this->view->generate('find_view.php', 'template_view.php', $data);
       }
       else    
-        $this->view->generate('articles_view.php', 'template_0.php', $data);
+        $this->view->generate('find_0.php', 'template_0.php', $data);
 
     }
     

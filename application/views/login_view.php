@@ -1,6 +1,5 @@
  
 <h1>Страница авторизации</h1>
-<p>
 <form action="" method="post" name="login_form">
 <table class="login">
 	<div>
@@ -38,10 +37,4 @@
 	style="width: 150px; height: 30px;"></th>-->
 </table>
 </form>
-</p>
 
-<?php if($_SESSION['admin'] == 1) { ?>
-<p style="color:green">Авторизация прошла успешно.</p>
-<?php } elseif($_SESSION['admin'] = 0) { ?>
-<p style="color:red">Логин и/или пароль введены неверно.</p>
-<?php ;}?> 

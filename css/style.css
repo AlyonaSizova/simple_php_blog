@@ -1,12 +1,35 @@
 
 body {
-    font: 10pt Arial, Helvetica, sans-serif; /* Шрифт на веб-странице */
+    font: 12pt Courier New, Times, sans-serif; /* Шрифт на веб-странице */
     background: #e1dfb9; /* Цвет фона */
    }
-   h2 {
-    font-size: 1.1em; /* Размер шрифта */
-    color: #800040; /* Цвет текста */
+h1{
+	font: 15pt bold Courier New, Helvetica, sans-serif;
+
+}   
+h2 {
+    font: 15pt Courier; /* Размер шрифта */
+    color: #FFFFF0; /* Цвет текста */
     margin-top: 0; /* Отступ сверху */
+   }
+   p {
+  	text-align: justify; /* Выравнивание по ширине */
+  	margin-left: 10px; /* Отступ слева в пикселах */
+  	margin-right: 10px; /* Отступ справа в пикселах */
+  	border-top: 1px solid #999; /* Параметры линии сверху */
+  	border-bottom: 1px solid #999; /* Параметры линии снизу */
+  	padding-top: 5px; /* Отступ от линии сверху до текста  */
+  	padding-bottom: 5px; /* Отступ от линии снизу до текста  */
+  	padding-left: 15px;
+  	padding-right: 15px;
+	}
+	p.comment{
+		background: #D3D3D3;
+	}
+	a{
+    color: #800000; /* Цвет текста */
+    padding: 2px; /* Поля вокруг текста */
+    text-decoration: none;
    }
    #container {
     width: 900px; /* Ширина слоя */
@@ -26,7 +49,6 @@ body {
    }
    ul.hr li {
     display: inline; /* Отображать как строчный элемент */
-    border: 1px solid #000; /* Рамка вокруг текста */
     padding: 3px; /* Поля вокруг текста */
    }
    #sidebar {
@@ -34,6 +56,17 @@ body {
     width: 200px; /* Ширина слоя */
     padding: 0 10px; /* Отступы вокруг текста */
     float: left; /* Обтекание по правому краю */
+   }
+   #tags {
+   	width: 160px;
+   	background: #D3D3D3;
+   	padding: 5px;
+   	text-align: center;
+   	margin-left: 5px;
+   	border-top: 1px solid #FFFFF0; /* Параметры линии сверху */
+  	border-bottom: 1px solid #FFFFF0;
+  	border-right: 1px solid #FFFFF0;
+  	border-left: 1px solid #FFFFF0; /* Параметры линии снизу */
    }
    #content {
     margin-left: 200px; /* Отступ слева */

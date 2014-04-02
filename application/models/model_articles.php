@@ -50,10 +50,11 @@ class Model_articles extends Model
 
       if ($obj == NULL) 
         return "haha";
+
       $obj->text = explode("[end]", $obj->text);
       $obj->text = implode(" ", $obj->text);
       
-      $array_obj = array('id' => $obj->id,
+      $data = array('id' => $obj->id,
              'title' => $obj->title,
              'text' => $obj->text,
              'ts' => $obj->ts);
@@ -62,15 +63,17 @@ class Model_articles extends Model
       $mod_comm = new Model_comments();
 
       if($comm = $mod_comm->get_comm($id))
-        $array_obj['comment'] = $comm;
+        $data['comment'] = $comm;
 
       include_once'application/models/model_tags.php';
       $mod_tags = new Model_tags();
 
       if($tags = $mod_tags->get_tags($id))
-        $array_obj['tags'] = $tags;      
-            
-      return $array_obj;
+        $data['tags_to_article'] = $tags; 
+
+      $data['tags'] = $this->get_tags();
+
+      return $data;
     }
     else
     { 
@@ -84,27 +87,32 @@ class Model_articles extends Model
     $mod_tags = new Model_tags();
 
     if($posts = $mod_tags->get_post($tag)){
-      $mysqli = $this->connect_db();
-      foreach ($posts as $key => $value) {
-        $query="SELECT * FROM articles WHERE id = $value"; 
-        $result = $mysqli->query($query);
-        if ($mysqli->error){
-          error_log('find_with_tag error (' . $mysqli->errno . ') '
-          . $mysqli->error);
+      $data['message'] = $posts['message'];
+      unset($posts['message']);
+      if ($data['message'] != 0) {
+        $mysqli = $this->connect_db();
+        foreach ($posts as $key => $value) {
+          $query="SELECT * FROM articles WHERE id = $value"; 
+          $result = $mysqli->query($query);
+          if ($mysqli->error){
+            error_log('find_with_tag error (' . $mysqli->errno . ') '
+            . $mysqli->error);
 
-          return false;
+            return false;
+          }
+          while($obj = $result->fetch_array()){ 
+            if(!$obj['text'])
+              continue;
+            $txt = explode("[end]" ,$obj['text']);
+            $obj['text'] = $txt[0];
+            $a[] = $obj;
+            $data['articles'] = $a;
+          }
         }
-        while($obj = $result->fetch_array()){ 
-          if(!$obj['text'])
-            continue;
-          $txt = explode("[end]" ,$obj['text']);
-          $obj['text'] = $txt[0];
-          $data[] = $obj;
-        }
-
+        $data['tags'] = $this->get_tags();
       }
       return $data;
-    } 
+    }
     return NULL; 
   }
 
@@ -131,11 +139,23 @@ class Model_articles extends Model
      $data[] = $obj;
     }  
 
+    $data['tags'] = $this->get_tags();
+
     $result->close(); 
     $mysqli->close();
 
   return $data; 
  } 
+
+ function get_tags()
+ {
+    include_once'application/models/model_tags.php';
+    $mod_tags = new Model_tags();
+    if ($tags = $mod_tags->get_all()) {
+      return $tags;
+    }
+    return NULL;
+ }
 
   function test_data($data)
   {

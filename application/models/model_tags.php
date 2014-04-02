@@ -53,7 +53,7 @@ class Model_tags extends Model
 
     $query = "SELECT * FROM tags WHERE post = $post";
     $result = $mysqli->query($query);
-
+    $data = NULL;
     if ($result) 
     {
       
@@ -74,16 +74,15 @@ class Model_tags extends Model
   function get_post($tag)
   {
     $mysqli = $this->connect_db();
+    $data = NULL;
 
     $query="SELECT * FROM tags WHERE tag = '$tag'";
     if (!($result = $mysqli->query($query))) {
         printf("Error: %s\n", $mysqli->error);
     }
-    // $result = $mysqli->query($query);
-    //$num=$result->num_rows();
-    //if($result == 0)echo "lll";
-    echo $tag;
-    printf("Select returned %d rows.\n", $result->num_rows);
+
+    $num = $result->num_rows;
+    $data['message'] = $num;
 
     while($obj = $result->fetch_array())
     { 
@@ -102,16 +101,13 @@ class Model_tags extends Model
  
     $mysqli = $this->connect_db();
 
-    $query="SELECT * FROM tags"; 
+    $query="SELECT DISTINCT tag FROM tags"; 
     $result = $mysqli->query($query); 
 
     while($obj = $result->fetch_array())
     { 
-      if(!$obj['text'])
-        continue;
-      $txt = explode("[end]" ,$obj['text']);
-      $obj['text'] = $txt[0];
-      $data[] = $obj;
+      
+      $data[] = $obj['tag'];
     }  
 
       $result->close(); 

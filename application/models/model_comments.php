@@ -26,7 +26,7 @@ class Model_comments extends Model
 
     $query = "SELECT * FROM comments WHERE post = '$id'";
     $result = $mysqli->query($query);
-    //$data = [];
+    $data = NULL;
 
   
     if ($result) 

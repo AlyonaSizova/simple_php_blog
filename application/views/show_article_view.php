@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<div class="row">
-	<div class="col-md-8">
-	<h1><span class="header"><?php echo $title ?></span></h1>
-	<div> <?php echo $text . "<br>";?> </div>
-	<p> <?php echo $ts . "<br>";?> </p>
-	</div>
-	<div class="col-md-4">
-	</div>
-</div>
+
+<h1><?php echo $title ?></h1>
+	<h5><?php echo $ts . "<br>";?></h5>
+	<p> <?php echo $text . "<br>";?> </p> 
+
+<?php if(isset($data['tags_to_article'])){
+		echo "<h5><br>Тэги к статье: </h5>";
+		foreach ($data['tags_to_article'] as $key => $value) {
+			echo "<a href=\"/articles/find/$value\">$value</a> ";
+		} 
+	}
+?>
+	
 
 <form action="/comments/new" method="post" name="form">
 <input name="id_comm" type="hidden" value=<?php echo $id; ?>>
@@ -19,18 +23,17 @@
 <br><br><input type="submit" value="Оставить комментарий">
 </form>
 <br><br>
-<?php
-foreach ($data['comment'] as $key => $value) {
-		extract($value);
-		echo $author . "<br>" . $comm . "<br><br>"; 
-	}
-?>
 
-<br><br>
-<?php
-foreach ($data['tags'] as $key => $value) {
-
-		 echo "<a href=\"/articles/find/$value\"><button>$value</button></a>";
-		// echo "<a href=\"/articles/edit/$id\"><button>edit</button></a><br>";
-	}
+<?php if(isset($data['comment'])){
+		foreach ($data['comment'] as $key => $value) {
+			extract($value);
+			if ($key%2) {?>
+				<h5><?php echo $author . "<br>";?> </h5>
+				<p><?php echo $comm . "<br>";?></p>
+			<?php }else{ ?>
+				<h5><?php echo $author . "<br>";?></h5>
+				<p class="comment"><?php echo $comm . "<br>";?></p>
+			<?php } 
+		}
+	}	
 ?>

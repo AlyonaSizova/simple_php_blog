@@ -1,14 +1,12 @@
-
-<?php echo  "По вашему запросу найдено ". $data['message'] . " результатов";?>
 <br>
-<?php unset($data['message']); 
-	if (isset($data[0])) {?>
+	<?php if($data['message'] > 0) {?>
+		<?php echo  "По вашему запросу найдено ". $data['message'] . " результатов";
+		unset($data['message']);?>
 		<?php foreach ($data as $key => $value) {
 			extract($value);?>
 			<html>
  			<head>
   				<title>Articles</title>
-  				<link rel="stylesheet" type="text/css" href="/css/style.css" media="all" /> 
 			</head>
  			<body>
   				<h1><?php echo $title;?></h1>
@@ -21,4 +19,4 @@
 		}
 	}
 	else 
-		echo "<h2>Ничего не найдено</h2>"; ?> 		
+		echo "По вашему запросу ничего не найдено"; ?> 		
