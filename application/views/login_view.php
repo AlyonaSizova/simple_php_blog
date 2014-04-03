@@ -1,40 +1,22 @@
- 
+<title>Авторизация</title> 
 <h1>Страница авторизации</h1>
 <form action="" method="post" name="login_form">
 <table class="login">
-	<div>
-    	<label for="name">Ваше имя</label>
-    	<input type="text" id="name" name="name" value=""/>
-  	</div>
-  	<div>
-    	<label for="email">Email</label>
-    	<input type="mail" id="email"e name="email" value=""/>
-  	</div>
-  	<div>
-  		<label for="password">Пароль</label>
-  		<input type="password" id"password" name="password" value="" >
-  	</div>	
-  	<div>
-    	<input type="submit" value="Войти"/>
-  	</div>
-	<!--<tr>
-		<th colspan="2">Авторизация</th>
-	</tr>
 	<tr>
-		<td>Логин</td>
-		<td><input type="text" name="name"></td>
-	</tr>
-	<tr>
-		<td>маил</td>
-		<td><input type="text" name="email"></td>
-	</tr>
-	<tr>
-		<td>Пароль</td>
-		<td><input type="password" name="password"></td>
-	</tr>
-	<th colspan="2" style="text-align: right">
-	<input type="submit" value="Войти" name="btn"
-	style="width: 150px; height: 30px;"></th>-->
+    	<td><label for="name">Ваше имя</label></td>
+    	<td><input type="text" id="name" name="name" value=""/></td>
+  	</tr>
+  	<tr>
+    	<td><label for="email">Email</label></td>
+    	<td><input type="mail" id="email"e name="email" value=""/></td>
+  	</tr>
+  	<tr>
+  		<td><label for="password">Пароль</label></td>
+  		<td><input type="password" id"password" name="password" value=""></td>
+  	</tr>	
+  	<tr>
+    	<td><input type="submit" value="Войти"/></td>
+  	</tr>
 </table>
 </form>
 

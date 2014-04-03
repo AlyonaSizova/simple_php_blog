@@ -12,7 +12,7 @@
     		<h2><a href="/articles">Articles</a></h2>
         <div id="tags">
           <img src="/images/divider.png" alt="img" width = "160px"> 
-          <?php include 'application/views/tags_view.php';?>
+          <?php include 'application/views/'.$message_view;?>
         </div>
     </div>
     <div id="content">

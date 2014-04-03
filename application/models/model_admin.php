@@ -9,7 +9,6 @@ class Model_admin extends Model
 
 	public function search_admin($name) 
     {
-
     $mysqli = $this->connect_db();
 
     $query = "SELECT * FROM members WHERE username = ?";
@@ -22,7 +21,6 @@ class Model_admin extends Model
     	$stmt->close();
     	return($count);
     }
-
     	return false;
   	}
 
@@ -46,22 +44,15 @@ class Model_admin extends Model
     $query="SELECT * FROM members"; 
     $result = $mysqli->query($query); 
 
-    while($obj = $result->fetch_array())
+    while($arr = $result->fetch_array())
     { 
-      $data[] = $obj;
-      /*echo "obj:<br>"; 
-      echo print_r($obj); 
-      echo "<br>"; 
-      $line.=$obj->uid; 
-      $line.=$obj->role; 
-      $line.=$obj->roleid; */
+      $a[] = $arr;
+      $data['admin'] = $a;
     }  
 
-      $result->close(); 
-
-
-   $mysqli->close(); 
-   return $data; 
+    $result->close(); 
+    $mysqli->close(); 
+    return $data; 
  } 
 
  public function delete($index)

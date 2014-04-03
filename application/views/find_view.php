@@ -2,7 +2,7 @@
 	<?php if($data['message'] > 0) {?>
 		<?php echo  "По вашему запросу найдено ". $data['message'] . " результатов";
 		unset($data['message']);?>
-		<?php foreach ($data as $key => $value) {
+		<?php foreach ($data['articles'] as $key => $value) {
 			extract($value);?>
 			<html>
  			<head>

@@ -1,18 +1,23 @@
-<html>
-<style>
-.error {color: #FF0000;}
-.header {color: #FF0099;}
-</style>
-<body>
-
-
-  <h2><span class="header">Редактирование.</span></h2>
-  <p><span class="error">* required field.</span></p>
+  <title>Редактирование</title>
+  <h1>Заполните форму.</h1>
+  <p><span class="error">* Обязательно заполнить</span></p>
   <form method="post" action=""> 
-   Название: <input type="text" name="name" value = <?php echo $title?>>
-  <span class="error">* </span>
-  <br><br>
-  Текст: <textarea name="text" rows="10" cols="100"><?php echo $text ?></textarea>
-  <br><br>
-  <input type="submit" name="submit" value="Готово"> 
+  <table class = "article"> 
+    <tr> 
+        <td><label for="name">Название:</label></td>
+        <td><input type="text" name="name" value = <?php echo $articles['title'];?>>
+          <span class="error">* </span></td>
+    </tr>
+    <tr>
+        <td><label for="text">Текст:</label></td>
+        <td><textarea name="text" rows="10" cols="60"><?php echo $articles['text']; ?></textarea>
+          <span class="error">* </span></td>
+    </tr>
+    <tr>
+        <td><label for="tags">Тэги (через ","):</label></td>
+        <td><input type="text" name="tags" value = "<?php echo $data['tags_to_article']; ?>"></td>
+
+    </tr>
+        <td><input type="submit" name="submit" value="Готово"></td>
+  </table>    
   </form>

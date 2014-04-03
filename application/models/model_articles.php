@@ -54,7 +54,7 @@ class Model_articles extends Model
       $obj->text = explode("[end]", $obj->text);
       $obj->text = implode(" ", $obj->text);
       
-      $data = array('id' => $obj->id,
+      $data['articles'] = array('id' => $obj->id,
              'title' => $obj->title,
              'text' => $obj->text,
              'ts' => $obj->ts);
@@ -100,17 +100,17 @@ class Model_articles extends Model
 
             return false;
           }
-          while($obj = $result->fetch_array()){ 
-            if(!$obj['text'])
+          while($arr = $result->fetch_array()){ 
+            if(!$arr['text'])
               continue;
-            $txt = explode("[end]" ,$obj['text']);
-            $obj['text'] = $txt[0];
-            $a[] = $obj;
+            $txt = explode("[end]" ,$arr['text']);
+            $arr['text'] = $txt[0];
+            $a[] = $arr;
             $data['articles'] = $a;
           }
         }
-        $data['tags'] = $this->get_tags();
       }
+      $data['tags'] = $this->get_tags();
       return $data;
     }
     return NULL; 

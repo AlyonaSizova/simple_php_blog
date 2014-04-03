@@ -14,10 +14,10 @@ class Controller_articles extends Controller
           $_SESSION['admin'] = 0;
       $data = $this->model_c->get_all();
       if($_SESSION['admin'] == 1){
-        $this->view->generate('articles_view.php', 'template_view.php', $data);
+        $this->view->generate('articles_view.php', 'tags_view.php', 'template_view.php', $data);
       }
       else    
-        $this->view->generate('articles_0.php', 'template_0.php', $data);    
+        $this->view->generate('articles_0.php', 'tags_view.php', 'template_0.php', $data);    
     }
 
     function action_show($index)
@@ -30,10 +30,10 @@ class Controller_articles extends Controller
     
       if ($data != "haha") {
         if($_SESSION['admin'] == 1){
-          $this->view->generate('show_article_view.php', 'template_view.php', $data);
+          $this->view->generate('show_article_view.php', 'tags_view.php', 'template_view.php', $data);
         }
         else    
-          $this->view->generate('show_article_view.php', 'template_0.php', $data);
+          $this->view->generate('show_article_view.php', 'tags_view.php', 'template_0.php', $data);
       }
       else{
         header("Location:/articles/not_found");
@@ -48,10 +48,10 @@ class Controller_articles extends Controller
       $tag = $this->model_c->test_data($tag);
       $data = $this->model_c->find_with_tag($tag);
       if($_SESSION['admin'] == 1){
-        $this->view->generate('find_view.php', 'template_view.php', $data);
+        $this->view->generate('find_view.php', 'tags_view.php', 'template_view.php', $data);
       }
       else    
-        $this->view->generate('find_0.php', 'template_0.php', $data);
+        $this->view->generate('find_0.php', 'tags_view.php', 'template_0.php', $data);
 
     }
     
@@ -88,12 +88,13 @@ class Controller_articles extends Controller
       {
          $data["text"] = "";
          $data["title"] = "";
+         $data['tags'] = $this->model_c->get_tags();
       }
       if($_SESSION['admin'] == 1){
-        $this->view->generate('articles_new_view.php', 'template_view.php', $data);
+        $this->view->generate('articles_new_view.php', 'tags_view.php', 'template_view.php', $data);
       }
       else    
-        $this->view->generate('articles_new_view.php', 'template_0.php', $data);
+        $this->view->generate('articles_new_view.php', 'tags_view.php', 'template_0.php', $data);
     } 
 
     function action_edit($index)
@@ -107,12 +108,16 @@ class Controller_articles extends Controller
       }
       if (!isset($_POST["name"]) && !isset($_POST["text"])){
         $data = $this->model_c->find($index);
+        if (isset($data['tags_to_article'])) {
+          $data['tags_to_article'] = implode(",", $data['tags_to_article']);
+        }
+        else $data['tags_to_article'] = " ";
         if ($data) {
           if($_SESSION['admin'] == 1){
-            $this->view->generate('edit_article_view.php', 'template_view.php', $data);
+            $this->view->generate('edit_article_view.php', 'tags_view.php', 'template_view.php', $data);
           }
           else    
-            $this->view->generate('edit_article_view.php', 'template_0.php', $data);
+            $this->view->generate('edit_article_view.php', 'tags_view.php', 'template_0.php', $data);
         }
         else{
           header("Location:/articles/not_found)");
@@ -138,6 +143,7 @@ class Controller_articles extends Controller
     function action_delete($index)
     {
       session_start();
+       $data['tags'] = $this->model_c->get_tags();
       if (!isset($_SESSION['admin'])) 
           $_SESSION['admin'] = 0;
       if ($_SESSION['admin'] != 1) {
@@ -146,10 +152,10 @@ class Controller_articles extends Controller
       }
       if (!isset($_POST["delete"])) {
         if($_SESSION['admin'] == 1){
-          $this->view->generate('delete_article_view.php', 'template_view.php', $data);
+          $this->view->generate('delete_article_view.php', 'tags_view.php', 'template_view.php', $data);
         }
         else    
-          $this->view->generate('delete_article_view.php', 'template_0.php', $data);
+          $this->view->generate('delete_article_view.php', 'tags_view.php', 'template_0.php', $data);
       }
       else{
         switch ($_POST["delete"]) {

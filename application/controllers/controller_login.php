@@ -11,6 +11,7 @@ class Controller_login extends Controller
 	function action_index()
 	{
 		$data["login_status"] = "";
+		$data['message'] = "Добро пожаловать!";
 		session_start();
 		if (!isset($_SESSION['admin'])) 
     			$_SESSION['admin'] = 0;
@@ -35,8 +36,8 @@ class Controller_login extends Controller
 			{
 				echo "string";
 				session_start();
-				$_SESSION['admin'] = 1; 
-				//echo $_SESSION['admin'];
+				$_SESSION['admin'] = 1;
+				$_SESSION['admin_name'] = $name;
 				header('Location:/articles');
 			}
 			else
@@ -44,13 +45,13 @@ class Controller_login extends Controller
 				echo $admin;
 				echo $password;
 				$_SESSION['admin'] = 0;
-				$this->view->generate('login_view.php', 'template_0.php');
+				$this->view->generate('login_view.php', 'message_view.php', 'template_0.php');
  
 			}
 		}
 		else
 		{
-			$this->view->generate('login_view.php', 'template_0.php', $data);
+			$this->view->generate('login_view.php', 'message_view.php', 'template_0.php', $data);
 		}
 		
 		
@@ -59,6 +60,7 @@ class Controller_login extends Controller
 	function action_exit()
 	{
 		session_start();
+		$data['message'] = "Всего доброго!";
 		if (!isset($_SESSION['admin'])) 
     			$_SESSION['admin'] = 0;
       	if ($_SESSION['admin'] != 1) {
@@ -67,10 +69,10 @@ class Controller_login extends Controller
       	}
       	if (!isset($_POST["exit"])) {
       		if($_SESSION['admin'] == 1){
-        		$this->view->generate('exit_view.php', 'template_view.php', $data);
+        		$this->view->generate('exit_view.php', 'message_view.php', 'template_view.php', $data);
       		}
       		else    
-        		$this->view->generate('exit_view.php', 'template_0.php', $data);
+        		$this->view->generate('exit_view.php', 'message_view.php', 'template_0.php', $data);
       	}
       	else{
         	switch ($_POST["exit"]) {

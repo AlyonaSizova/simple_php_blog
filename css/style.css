@@ -54,11 +54,13 @@ h2 {
    #sidebar {
     margin-top: 10px; 
     width: 200px; /* Ширина слоя */
+    min-height: 400px;
     padding: 0 10px; /* Отступы вокруг текста */
     float: left; /* Обтекание по правому краю */
    }
    #tags {
    	width: 160px;
+   	min-height: 200px;
    	background: #D3D3D3;
    	padding: 5px;
    	text-align: center;
@@ -70,6 +72,7 @@ h2 {
    }
    #content {
     margin-left: 200px; /* Отступ слева */
+    min-height: 400px;
     padding: 10px; /* Поля вокруг текста */
     background: #fff; /* Цвет фона правой колонки */
    }

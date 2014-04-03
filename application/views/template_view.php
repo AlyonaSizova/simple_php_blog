@@ -17,7 +17,7 @@
     		<h2><a href="/admin">Admin</a></h2>
     		<div id="tags">
     			<img src="/images/divider.png" alt="альтернативный текст"  width = "160px"> 
-   				<?php include 'application/views/tags_view.php';?>
+   				<?php include 'application/views/'.$message_view;?>
     		</div>		
     </div>
     <div id="content">
