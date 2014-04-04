@@ -1,18 +1,15 @@
 <?php
+
+session_start();
+      if (!isset($_SESSION['admin'])) 
+          $_SESSION['admin'] = 0;
+
 class Controller_articles extends Controller
 {
-    function __construct()
-    {
-      parent::__construct();
-      $this->model_c = new Model_articles();
-    }
 
     function action_index()
     {
-      session_start();
-      if (!isset($_SESSION['admin'])) 
-          $_SESSION['admin'] = 0;
-      $data = $this->model_c->get_all();
+      $data = $this->model_a->get_all();
       if($_SESSION['admin'] == 1){
         $this->view->generate('articles_view.php', 'tags_view.php', 'template_view.php', $data);
       }
@@ -22,11 +19,7 @@ class Controller_articles extends Controller
 
     function action_show($index)
     {
-      session_start();
-      if (!isset($_SESSION['admin'])) 
-          $_SESSION['admin'] = 0;
-      $data = $this->model_c->find($index);
-      //$data = serialize($data);
+      $data = $this->model_a->find($index);
     
       if ($data != "haha") {
         if($_SESSION['admin'] == 1){
@@ -42,11 +35,8 @@ class Controller_articles extends Controller
 
     function action_find($tag)
     {
-      session_start();
-      if (!isset($_SESSION['admin'])) 
-          $_SESSION['admin'] = 0;
-      $tag = $this->model_c->test_data($tag);
-      $data = $this->model_c->find_with_tag($tag);
+      $tag = $this->model_a->test_data($tag);
+      $data = $this->model_a->find_with_tag($tag);
       if($_SESSION['admin'] == 1){
         $this->view->generate('find_view.php', 'tags_view.php', 'template_view.php', $data);
       }
@@ -57,84 +47,50 @@ class Controller_articles extends Controller
     
     function action_new()
     {	
-      session_start();
-      if (!isset($_SESSION['admin'])) 
-          $_SESSION['admin'] = 0;
+  
       if ($_SESSION['admin'] != 1) {
-        $_SESSION['admin'] == 0;
         header("Location:/login");
       }
       if (isset($_POST["name"]) && isset($_POST["text"]))
       {
-          $title = $_POST["name"]; 
-          $title = $this->model_c->test_data($title);
+          $data["title"] = $this->model_a->test_data($_POST["name"]);
+          $data["text"] = $this->model_a->test_data($_POST["text"]);
+          $data["tags"] = $this->model_a->test_data($_POST["tags"]);
 
-          $text = $_POST["text"]; 
-          $text = $this->model_c->test_data($text);
+          $data["id"] = $this->model_a->put_data($data);
 
-          $tags = $_POST["tags"];
-          $tags = $this->model_c->test_data($tags);
-
-          $data["title"] = $title;
-          $data["text"] = $text;
-          $data["tags"] = $tags;
-
-          $id = $this->model_c->put_data($data);
-
-          $data["id"] = $id;
           header("Location:/articles/show/$id");
       }
       else
       {
-         $data["text"] = "";
-         $data["title"] = "";
-         $data['tags'] = $this->model_c->get_tags();
+         $data['tags'] = $this->model_a->get_tags();
       }
-      if($_SESSION['admin'] == 1){
+
         $this->view->generate('articles_new_view.php', 'tags_view.php', 'template_view.php', $data);
-      }
-      else    
-        $this->view->generate('articles_new_view.php', 'tags_view.php', 'template_0.php', $data);
+  
     } 
 
     function action_edit($index)
     {
-      session_start();
-      if (!isset($_SESSION['admin'])) 
-          $_SESSION['admin'] = 0;
-      if ($_SESSION['admin'] != 1) {
-        $_SESSION['admin'] == 0;
+      if ($_SESSION['admin'] != 1) 
         header("Location:/login");
-      }
+      
       if (!isset($_POST["name"]) && !isset($_POST["text"])){
-        $data = $this->model_c->find($index);
-        if (isset($data['tags_to_article'])) {
-          $data['tags_to_article'] = implode(",", $data['tags_to_article']);
-        }
-        else $data['tags_to_article'] = " ";
-        if ($data) {
-          if($_SESSION['admin'] == 1){
+        $data = $this->model_a->find($index);
+        $data['tags_to_article'] = $this->model_a->arr_to_str($data['tags_to_article']);
+        if ($data) 
             $this->view->generate('edit_article_view.php', 'tags_view.php', 'template_view.php', $data);
-          }
-          else    
-            $this->view->generate('edit_article_view.php', 'tags_view.php', 'template_0.php', $data);
-        }
-        else{
+        else
           header("Location:/articles/not_found)");
-        }  
+         
       }
       else{
-        $title = $_POST["name"]; 
-        $title = $this->model_c->test_data($title);
-
-        $text = $_POST["text"]; 
-        $text = $this->model_c->test_data($text);
-
-        $data["title"] = $title;
-        $data["text"] = $text;
+        $data["title"] = $this->model_a->test_data($_POST["name"]);
+        $data["text"] = $this->model_a->test_data($_POST["text"]);
+        $data["tags"] = $_POST["tags"];
         $data["id"] = $index;
 
-        $this->model_c->edit($data);
+        $this->model_a->edit($data);
 
         header("Location:/articles/show/$index");
       }  
@@ -142,25 +98,17 @@ class Controller_articles extends Controller
 
     function action_delete($index)
     {
-      session_start();
-       $data['tags'] = $this->model_c->get_tags();
-      if (!isset($_SESSION['admin'])) 
-          $_SESSION['admin'] = 0;
-      if ($_SESSION['admin'] != 1) {
-        $_SESSION['admin'] == 0;
+      if ($_SESSION['admin'] != 1) 
         header("Location:/login");
-      }
-      if (!isset($_POST["delete"])) {
-        if($_SESSION['admin'] == 1){
+
+      $data['tags'] = $this->model_a->get_tags();
+    
+      if (!isset($_POST["delete"])) 
           $this->view->generate('delete_article_view.php', 'tags_view.php', 'template_view.php', $data);
-        }
-        else    
-          $this->view->generate('delete_article_view.php', 'tags_view.php', 'template_0.php', $data);
-      }
       else{
         switch ($_POST["delete"]) {
           case 'yes':
-            $data = $this->model_c->delete($index);
+            $data = $this->model_a->delete($index);
             header("Location:/articles");
             break;
           
@@ -169,15 +117,11 @@ class Controller_articles extends Controller
             break;
         }
       } 
+    }  
 
       function action_not_found()
-      {
-        session_start();
-        if (!isset($_SESSION['admin'])) 
-          $_SESSION['admin'] = 0;
+      { 
         $this->view->generate('not_found_view.php', 'template_view.php');
-      } 
-
-    }			
+      }  		
 }
 ?>

@@ -157,21 +157,13 @@ class Model_articles extends Model
     return NULL;
  }
 
-  function test_data($data)
-  {
-    $data = trim($data); // удаляет пробелы в начале и конце слова
-    $data = stripslashes($data); // удаляет экранирующие символы
-    $data = htmlspecialchars($data);
-    return $data;
-  }
-
   function edit($data)
   {
     $title = $data['title'];
     $text = $data['text'];
     $id = $data['id'];
 
-   $mysqli = $this->connect_db();
+    $mysqli = $this->connect_db();
 
     $query = "UPDATE articles SET title = '$title', text = '$text' WHERE id = '$id'";
     
@@ -182,6 +174,11 @@ class Model_articles extends Model
       . $mysqli->error);
       return false;
     }
+
+    include_once'application/models/model_tags.php';
+    $mod_tags = new model_tags();
+    $mod_tags->edit_tag($data["tags"], $id);
+
     return $id;  
   }
 
@@ -199,28 +196,15 @@ class Model_articles extends Model
       . $mysqli->error);
       return false;
     }
+    include_once'application/models/model_tags.php';
+    $mod_tags = new Model_tags();
+    $mod_tags->delete($index);
+
+    include_once'application/models/model_comments.php';
+    $mod_comm = new Model_comments();
+    $mod_comm->delete($index);
 
     return $index;
-
-  }
-
-
-  function connect_db()
-  {
-    $blog_config = parse_ini_file("app.ini", true);
-    $db=$blog_config['db'];
-    $host=$db['host'];
-    $user=$db['user'];
-    $password=$db['pass'];
-    $db_name=$db['db'];
-    $mysqli = new mysqli($host, $user, $password, $db_name);
-
-    if ($mysqli->connect_error){
-      die('Connect error (' . $mysqli->connect_errno . ') '
-      . $mysqli->connect_error);
-    }
-
-    return $mysqli;
 
   }
 }
