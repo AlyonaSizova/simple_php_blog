@@ -5,7 +5,7 @@
   <table class = "article"> 
     <tr> 
         <td><label for="name">Название:</label></td>
-        <td><input type="text" name="name" value = <?php echo $articles['title'];?>>
+        <td><input type="text" name="name" value = "<?php echo $articles['title'];?>">
           <span class="error">* </span></td>
     </tr>
     <tr>

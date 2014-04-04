@@ -10,6 +10,7 @@ class Controller_articles extends Controller
     function action_index()
     {
       $data = $this->model_a->get_all();
+      $data['tags'] = $this->model_t->all_tags();
       if($_SESSION['admin'] == 1){
         $this->view->generate('articles_view.php', 'tags_view.php', 'template_view.php', $data);
       }
@@ -20,8 +21,11 @@ class Controller_articles extends Controller
     function action_show($index)
     {
       $data = $this->model_a->find($index);
-    
-      if ($data != "haha") {
+      
+      if ($data != false) {
+        $data['tags_to_article'] = $this->model_t->tags_to_article($index);
+        $data['tags'] = $this->model_t->all_tags();
+        $data['comment'] = $this->model_c->get_comm($index);
         if($_SESSION['admin'] == 1){
           $this->view->generate('show_article_view.php', 'tags_view.php', 'template_view.php', $data);
         }
@@ -37,6 +41,7 @@ class Controller_articles extends Controller
     {
       $tag = $this->model_a->test_data($tag);
       $data = $this->model_a->find_with_tag($tag);
+      $data['tags'] = $this->model_t->all_tags();
       if($_SESSION['admin'] == 1){
         $this->view->generate('find_view.php', 'tags_view.php', 'template_view.php', $data);
       }
@@ -53,17 +58,20 @@ class Controller_articles extends Controller
       }
       if (isset($_POST["name"]) && isset($_POST["text"]))
       {
-          $data["title"] = $this->model_a->test_data($_POST["name"]);
-          $data["text"] = $this->model_a->test_data($_POST["text"]);
-          $data["tags"] = $this->model_a->test_data($_POST["tags"]);
+          $data["title"] = $_POST["name"];
+          $data["text"] = $_POST["text"];
 
           $data["id"] = $this->model_a->put_data($data);
+
+          $data["tags_to_article"] = $_POST["tags"];
+          $model_t->put_tag($data["tags_to_article"], $data["id"]);
+          $data['tags'] = $this->model_t->all_tags();
 
           header("Location:/articles/show/$id");
       }
       else
       {
-         $data['tags'] = $this->model_a->get_tags();
+         $data['tags'] = $this->model_t->all_tags();
       }
 
         $this->view->generate('articles_new_view.php', 'tags_view.php', 'template_view.php', $data);
@@ -77,7 +85,9 @@ class Controller_articles extends Controller
       
       if (!isset($_POST["name"]) && !isset($_POST["text"])){
         $data = $this->model_a->find($index);
+        $data['tags_to_article'] = $this->model_t->tags_to_article($index);
         $data['tags_to_article'] = $this->model_a->arr_to_str($data['tags_to_article']);
+        $data['tags'] = $this->model_t->all_tags();
         if ($data) 
             $this->view->generate('edit_article_view.php', 'tags_view.php', 'template_view.php', $data);
         else
@@ -85,12 +95,15 @@ class Controller_articles extends Controller
          
       }
       else{
-        $data["title"] = $this->model_a->test_data($_POST["name"]);
-        $data["text"] = $this->model_a->test_data($_POST["text"]);
-        $data["tags"] = $_POST["tags"];
+        $data["title"] = $_POST["name"];
+        $data["text"] = $_POST["text"];
         $data["id"] = $index;
-
         $this->model_a->edit($data);
+
+        $data["tags_to_article"] = $_POST["tags"];
+        $this->model_t->edit_tag($data["tags_to_article"], $index);
+
+        $data['tags'] = $this->model_t->all_tags();
 
         header("Location:/articles/show/$index");
       }  
@@ -101,14 +114,16 @@ class Controller_articles extends Controller
       if ($_SESSION['admin'] != 1) 
         header("Location:/login");
 
-      $data['tags'] = $this->model_a->get_tags();
+      $data['tags'] = $this->model_t->all_tags();
     
       if (!isset($_POST["delete"])) 
           $this->view->generate('delete_article_view.php', 'tags_view.php', 'template_view.php', $data);
       else{
         switch ($_POST["delete"]) {
           case 'yes':
-            $data = $this->model_a->delete($index);
+            $this->model_a->delete($index);
+            $this->model_t->delete($index);
+            $this->model_c->delete($index);  
             header("Location:/articles");
             break;
           
@@ -121,7 +136,8 @@ class Controller_articles extends Controller
 
       function action_not_found()
       { 
-        $this->view->generate('not_found_view.php', 'template_view.php');
+        $data['message'] = ":-(";
+        $this->view->generate('not_found_view.php', 'message_view.php', 'template_view.php', $data);
       }  		
 }
 ?>

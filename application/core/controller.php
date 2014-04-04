@@ -9,8 +9,9 @@ class Controller {
     
     function __construct()
     {
-        include "application/models/model_comments.php";
-        include "application/models/model_tags.php";
+        include_once "application/models/model_comments.php";
+        include_once "application/models/model_tags.php";
+        include_once "application/models/model_articles.php";
         $this->view = new View();
         $this->model = new Model();
         $this->model_a = new Model_articles();

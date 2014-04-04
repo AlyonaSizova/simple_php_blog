@@ -23,11 +23,6 @@ class Model_articles extends Model
     }
     $id = $mysqli->insert_id;
 
-    include_once'application/models/model_tags.php';
-    $mod_tags = new model_tags();
-    $mod_tags->put_tag($data["tags"], $id);
-
-    $this->id = $id; 
     return $id;  
   }
 
@@ -43,8 +38,8 @@ class Model_articles extends Model
       . $mysqli->error);
       return false;
     }
-  
-    if ($result != FALSE) 
+
+    if ($result != false) 
     {
       $obj = $result->fetch_object();
 
@@ -58,20 +53,6 @@ class Model_articles extends Model
              'title' => $obj->title,
              'text' => $obj->text,
              'ts' => $obj->ts);
-
-      include_once'application/models/model_comments.php';
-      $mod_comm = new Model_comments();
-
-      if($comm = $mod_comm->get_comm($id))
-        $data['comment'] = $comm;
-
-      include_once'application/models/model_tags.php';
-      $mod_tags = new Model_tags();
-
-      if($tags = $mod_tags->get_tags($id))
-        $data['tags_to_article'] = $tags; 
-
-      $data['tags'] = $this->get_tags();
 
       return $data;
     }
@@ -110,7 +91,6 @@ class Model_articles extends Model
           }
         }
       }
-      $data['tags'] = $this->get_tags();
       return $data;
     }
     return NULL; 
@@ -139,29 +119,17 @@ class Model_articles extends Model
      $data[] = $obj;
     }  
 
-    $data['tags'] = $this->get_tags();
-
     $result->close(); 
     $mysqli->close();
 
   return $data; 
  } 
 
- function get_tags()
- {
-    include_once'application/models/model_tags.php';
-    $mod_tags = new Model_tags();
-    if ($tags = $mod_tags->get_all()) {
-      return $tags;
-    }
-    return NULL;
- }
-
   function edit($data)
   {
-    $title = $data['title'];
-    $text = $data['text'];
-    $id = $data['id'];
+    $title = $this->test_data($data['title']);
+    $text = $this->test_data($data['text']);
+    $id = $this->test_data($data['id']);
 
     $mysqli = $this->connect_db();
 
@@ -174,11 +142,6 @@ class Model_articles extends Model
       . $mysqli->error);
       return false;
     }
-
-    include_once'application/models/model_tags.php';
-    $mod_tags = new model_tags();
-    $mod_tags->edit_tag($data["tags"], $id);
-
     return $id;  
   }
 
@@ -196,14 +159,6 @@ class Model_articles extends Model
       . $mysqli->error);
       return false;
     }
-    include_once'application/models/model_tags.php';
-    $mod_tags = new Model_tags();
-    $mod_tags->delete($index);
-
-    include_once'application/models/model_comments.php';
-    $mod_comm = new Model_comments();
-    $mod_comm->delete($index);
-
     return $index;
 
   }

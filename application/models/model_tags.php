@@ -8,9 +8,9 @@ class Model_tags extends Model
     if($tags == NULL)
       return NULL;
 
-    $mysqli = $this->connect_db();
-
     $tags = explode(",", $tags);
+
+    $mysqli = $this->connect_db();
 
     foreach ($tags as $key => $value) {
       $value = $this->test_data($value);
@@ -25,8 +25,7 @@ class Model_tags extends Model
         }
       }
     }
-
-      return NULL;
+    return NULL;
   }
 
   function exist_tag($tag, $post)
@@ -46,7 +45,7 @@ class Model_tags extends Model
       return 0;
   }
 
-  public function get_tags($post) 
+  public function tags_to_article($post) 
   {
 
     $mysqli = $this->connect_db();
@@ -96,7 +95,7 @@ class Model_tags extends Model
 
   }
 
-  function get_all() 
+  function all_tags() 
   { 
  
     $mysqli = $this->connect_db();
