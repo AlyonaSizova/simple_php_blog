@@ -12,10 +12,7 @@ class Controller_comments extends Controller
       session_start();
       if (!isset($_SESSION['admin'])) 
           $_SESSION['admin'] = 0;
-      if ($_SESSION['admin'] != 1) {
-        $_SESSION['admin'] == 0;
-        header("Location:/login");
-      }
+      
       if (isset($_POST["author_comm"]) && isset($_POST["txt_comm"]))
       {
           $author = $_POST["author_comm"]; 

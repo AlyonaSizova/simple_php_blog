@@ -7,31 +7,25 @@ class Model_login extends Model
 	var $text;
 	var $ts;
 
-	public function true_admin($name, $email, $password) 
-    {
-
-    $mysqli = $this->connect_db();
-
-    if($stmt = $mysqli->prepare(
-    	"SELECT * FROM members WHERE email = ? AND username = ? AND password = ?")){
-    	$stmt->bind_param("sss", $email, $name, $password);
-    	$stmt->execute();
-    	$stmt->store_result();
-    	$count = $stmt->num_rows;
-      //$stmt->free_result();
-    	$stmt->close();
-    	return($count);
-    }
-    	return 0;
-  	} 
-
-  public function test_data($data)
+	function true_admin($name, $email, $password) 
   {
-    $data = trim($data); // удаляет пробелы в начале и конце слова
-    $data = stripslashes($data); // удаляет экранирующие символы
-    $data = htmlspecialchars($data);
-    return $data;
+      $sql = "SELECT * FROM members WHERE email = ? AND username = ? AND password = ?";
+      if($this->select_query($sql, "sss", $email, $name, $password)){
+        return true;
+      }
+        return false;
   }
+
+  function filter_input()
+  {
+    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+    $password = $this->hash($password, $email);
+    return $data = array($name, $email, $password);
+
+  }
+
 
   function exit_ses()
   {
@@ -46,23 +40,5 @@ class Model_login extends Model
   	return sha1($salt . $password);
   }
 
-  public function connect_db()
-  {
-    $blog_config = parse_ini_file("app.ini", true);
-    $db=$blog_config['db'];
-    $host=$db['host'];
-    $user=$db['user'];
-    $password=$db['pass'];
-    $db_name=$db['db'];
-    $mysqli = new mysqli($host, $user, $password, $db_name);
-
-    if ($mysqli->connect_error){
-      die('Connect error (' . $mysqli->connect_errno . ') '
-      . $mysqli->connect_error);
-    }
-
-    return $mysqli;
-
-  }
   
 } 

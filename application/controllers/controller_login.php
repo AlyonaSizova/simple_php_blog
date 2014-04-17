@@ -5,52 +5,34 @@ class Controller_login extends Controller
 	function __construct()
     {
       parent::__construct();
-      $this->model_c = new Model_login();
+     // $this->model_l = new Model_login();
     }
 	
 	function action_index()
 	{
-		$data["login_status"] = "";
-		$data['message'] = "Добро пожаловать!";
 		session_start();
 		if (!isset($_SESSION['admin'])) 
     			$_SESSION['admin'] = 0;
 
 		if(isset($_POST['name'], $_POST['email'], $_POST['password']))
 		{
-			// Sanitize and validate the data passed in
-    		$name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
-    		$email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-    		$email = filter_var($email, FILTER_VALIDATE_EMAIL);
-    		$email = $this->model_c->test_data($email);
+			$input = $this->model_l->filter_input();
 
-    		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        		echo "not valid mail";
-   			}
-			$password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-			$password = $this->model_c->hash($password, $email);
-
-			$admin = $this->model_c->true_admin($name, $email, $password);
+			$admin = $this->model_l->true_admin($input[0], $input[1], $input[2]);
 		
-			if($admin == 1)
-			{
-				echo "string";
-				session_start();
+			if($admin){
 				$_SESSION['admin'] = 1;
 				$_SESSION['admin_name'] = $name;
 				header('Location:/articles');
 			}
 			else
-			{
-				echo $admin;
-				echo $password;
-				$_SESSION['admin'] = 0;
-				$this->view->generate('login_view.php', 'message_view.php', 'template_0.php');
+				$data['message'] = "Войти не удалось";
+				$this->view->generate('login_view.php', 'message_view.php', 'template_0.php', $data);
  
-			}
 		}
 		else
 		{
+			$data['message'] = "Добро пожаловать!";
 			$this->view->generate('login_view.php', 'message_view.php', 'template_0.php', $data);
 		}
 		
@@ -77,7 +59,7 @@ class Controller_login extends Controller
       	else{
         	switch ($_POST["exit"]) {
           case 'yes':
-            $data = $this->model_c->exit_ses();
+            $data = $this->model_l->exit_ses();
             header("Location:/articles");
             break;
           

@@ -1,5 +1,5 @@
 
-<?php foreach ($data as $key => $value) {
+<?php foreach ($data['articles'] as $key => $value) {
 			extract($value);?>
 			<html>
  			<head>

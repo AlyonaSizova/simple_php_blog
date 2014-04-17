@@ -3,7 +3,6 @@ class Route
 {
     static function start()
     {
-        // контроллер и действие по умолчанию
         $controller_name = 'Main';
         $action_name = 'index';
         $id = null;
@@ -38,12 +37,12 @@ class Route
 
         // подцепляем файл с классом модели (файла модели может и не быть)
 
-        $model_file = strtolower($model_name).'.php';
+       /* $model_file = strtolower($model_name).'.php';
         $model_path = "application/models/".$model_file;
         if(file_exists($model_path))
         {
             include "application/models/".$model_file;
-        }
+        }*/
 
         // подцепляем файл с классом контроллера
         $controller_file = strtolower($controller_name).'.php';

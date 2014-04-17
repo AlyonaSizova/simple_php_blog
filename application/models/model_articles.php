@@ -9,57 +9,33 @@ class Model_articles extends Model
 
   function put_data($data)
   {
-    $this->title = $data['title'];
-    $this->text = $data['text'];
+    $title = $data['title'];
+    $text = $data['text'];
 
-    $mysqli = $this->connect_db();
-
-    $query = "INSERT INTO articles (title, text) VALUES ('$this->title', '$this->text')";
-    $result = $mysqli->query($query);
-    if ($mysqli->error){
-      error_log('put_data error (' . $mysqli->errno . ') '
-      . $mysqli->error);
-      return false;
-    }
-    $id = $mysqli->insert_id;
-
-    return $id;  
+    $query = "INSERT INTO articles (title, text) VALUES (?, ?)";
+    $stmt = $this->insert_query($query, "ss", $title, $text);
+    
+    return $stmt->insert_id; 
   }
 
   function find($id) 
   {
+    $query = "SELECT * FROM articles WHERE id = ?";
 
-    $mysqli = $this->connect_db();
-
-    $query = "SELECT * FROM articles WHERE id = $id";
-    $result = $mysqli->query($query);
-    if ($mysqli->error){
-      error_log('find error (' . $mysqli->errno . ') '
-      . $mysqli->error);
-      return false;
-    }
-
-    if ($result != false) 
-    {
-      $obj = $result->fetch_object();
-
-      if ($obj == NULL) 
-        return "haha";
-
-      $obj->text = explode("[end]", $obj->text);
-      $obj->text = implode(" ", $obj->text);
-      
-      $data['articles'] = array('id' => $obj->id,
-             'title' => $obj->title,
-             'text' => $obj->text,
-             'ts' => $obj->ts);
+    if ($arr = $this->select_query($query, "i", $id)) {
+      $arr = $arr[0];
+      $arr['text'] = explode("[end]", $arr['text']);
+      $arr['text'] = implode(" ", $arr['text']);
+      $data['articles'] = array('id' => $arr['id'],
+             'title' => $arr['title'],
+             'text' => $arr['text'],
+             'ts' => $arr['ts']);
 
       return $data;
     }
-    else
-    { 
-      return NULL;
-    }
+
+    return NULL;
+      
   }
 
   function find_with_tag($tag)
@@ -70,26 +46,22 @@ class Model_articles extends Model
     if($posts = $mod_tags->get_post($tag)){
       $data['message'] = $posts['message'];
       unset($posts['message']);
-      if ($data['message'] != 0) {
-        $mysqli = $this->connect_db();
-        foreach ($posts as $key => $value) {
-          $query="SELECT * FROM articles WHERE id = $value"; 
-          $result = $mysqli->query($query);
-          if ($mysqli->error){
-            error_log('find_with_tag error (' . $mysqli->errno . ') '
-            . $mysqli->error);
+      if ($posts) {
 
-            return false;
-          }
-          while($arr = $result->fetch_array()){ 
-            if(!$arr['text'])
-              continue;
-            $txt = explode("[end]" ,$arr['text']);
-            $arr['text'] = $txt[0];
-            $a[] = $arr;
-            $data['articles'] = $a;
-          }
-        }
+          $query="SELECT * FROM articles WHERE id = ?"; 
+
+         $arr = $this->prepare_query($query, "i", $posts);
+          foreach ($arr as $key => $value) {
+
+             if(!$value['text'])
+               continue;
+            $txt = explode('[end]' ,$value['text']);
+            $arr[$key]['text'] = $txt[0];
+            
+           }
+
+          $data['articles'] = $arr;
+
       }
       return $data;
     }
@@ -127,39 +99,20 @@ class Model_articles extends Model
 
   function edit($data)
   {
-    $title = $this->test_data($data['title']);
-    $text = $this->test_data($data['text']);
-    $id = $this->test_data($data['id']);
+    $title = $data['title'];
+    $text = $data['text'];
+    $id = $data['id'];
 
-    $mysqli = $this->connect_db();
-
-    $query = "UPDATE articles SET title = '$title', text = '$text' WHERE id = '$id'";
-    
-    $mysqli->query($query);
-
-    if ($mysqli->error){
-      error_log('Update error (' . $mysqli->errno . ') '
-      . $mysqli->error);
-      return false;
-    }
+    $query = "UPDATE articles SET title = ?, text = ? WHERE id = ?";
+    $this->insert_query($query, "ssi", $title, $text, $id);
     return $id;  
   }
 
   function delete($index)
   {
-   $mysqli = $this->connect_db();
-
     $query = "DELETE FROM articles
-        WHERE id = '$index'";
-
-    $mysqli->query($query);
-
-    if ($mysqli->error){
-      error_log('Delete error (' . $mysqli->errno . ') '
-      . $mysqli->error);
-      return false;
-    }
-    return $index;
+        WHERE id = ?";
+    return $this->insert_query($query, "i", $index);
 
   }
 }

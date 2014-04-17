@@ -1,5 +1,5 @@
 <br>
-	<?php if($data['message'] > 0) {?>
+	<?php if($data['message']) {?>
 		<?php echo  "По вашему запросу найдено ". $data['message'] . " результатов";
 		unset($data['message']);?>
 		<?php foreach ($data['articles'] as $key => $value) {

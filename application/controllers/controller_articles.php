@@ -9,7 +9,7 @@ class Controller_articles extends Controller
 
     function action_index()
     {
-      $data = $this->model_a->get_all();
+      $data['articles'] = $this->model_a->get_all();
       $data['tags'] = $this->model_t->all_tags();
       if($_SESSION['admin'] == 1){
         $this->view->generate('articles_view.php', 'tags_view.php', 'template_view.php', $data);
@@ -61,10 +61,10 @@ class Controller_articles extends Controller
           $data["title"] = $_POST["name"];
           $data["text"] = $_POST["text"];
 
-          $data["id"] = $this->model_a->put_data($data);
+          $id = $data["id"] = $this->model_a->put_data($data);
 
           $data["tags_to_article"] = $_POST["tags"];
-          $model_t->put_tag($data["tags_to_article"], $data["id"]);
+          $this->model_t->put_tag($data["tags_to_article"], $data["id"]);
           $data['tags'] = $this->model_t->all_tags();
 
           header("Location:/articles/show/$id");

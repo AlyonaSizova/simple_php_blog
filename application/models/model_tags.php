@@ -10,19 +10,13 @@ class Model_tags extends Model
 
     $tags = explode(",", $tags);
 
-    $mysqli = $this->connect_db();
-
     foreach ($tags as $key => $value) {
-      $value = $this->test_data($value);
 
       if (!$this->exist_tag($value, $post)) {
-        $query = "INSERT INTO tags (post, tag) VALUES ('$post', '$value')";
-        $result = $mysqli->query($query);
-        if ($mysqli->error){
-          error_log('Put_tag error (' . $mysqli->errno . ') '
-          . $mysqli->error);
+        $query = "INSERT INTO tags (post, tag) VALUES (?, ?)";
+        if(!$this->insert_query($query, "is", $post, $value))
           return false;
-        }
+        
       }
     }
     return NULL;
@@ -30,76 +24,41 @@ class Model_tags extends Model
 
   function exist_tag($tag, $post)
   {
-    $mysqli = $this->connect_db();
-
-    if($stmt = $mysqli->prepare(
-      "SELECT * FROM tags WHERE tag = ? AND post = ?")){
-      $stmt->bind_param("ss", $tag, $post);
-      $stmt->execute();
-      $stmt->store_result();
-      $count = $stmt->num_rows;
-      //$stmt->free_result();
-      $stmt->close();
-      return($count);
-    }
-      return 0;
+      $query = "SELECT * FROM tags WHERE tag = ? AND post = ?";
+      return $this->select_query($query, "si", $tag, $post);
   }
 
-  public function tags_to_article($post) 
+  function tags_to_article($post) 
   {
+    $tags = array();
+    $query = "SELECT tag FROM tags WHERE post = ?";
+    
+    $arr = $this->select_query($query, "i", $post); 
 
-    $mysqli = $this->connect_db();
-
-    $query = "SELECT * FROM tags WHERE post = $post";
-    $result = $mysqli->query($query);
-    $data = NULL;
-    if ($result) 
-    {
-      
-      while($obj = $result->fetch_array())  
-        $data[] = $obj['tag'];  
-
-      $result->close(); 
-      $mysqli->close(); 
-   
-      return $data; 
+    foreach ($arr as $key => $value) {
+      $tags[] = $value['tag'];
     }
-    else
-    { 
-      return NULL;
-    }
+    return $tags;
   }
 
   function get_post($tag)
   {
-    $mysqli = $this->connect_db();
-    $data = NULL;
-
-    $query="SELECT * FROM tags WHERE tag = '$tag'";
-    if (!($result = $mysqli->query($query))) {
-        printf("Error: %s\n", $mysqli->error);
-    }
-
-    $num = $result->num_rows;
-    $data['message'] = $num;
-
-    while($obj = $result->fetch_array())
-    { 
-      $data[] = $obj['post'];
+    $query="SELECT post FROM tags WHERE tag = ?";
+    $arr = $this->select_query($query, "s", $tag);
     
-    }  
-
-      $result->close(); 
-      $mysqli->close(); 
-      return $data; 
+    $num = 0;
+    foreach ($arr as $key => $value) {
+      $data[] = $value['post'];
+      $num++;
+    }
+    $data['message'] = $num;
+    return $data;
 
   }
 
   function all_tags() 
   { 
- 
     $mysqli = $this->connect_db();
-
     $query="SELECT DISTINCT tag FROM tags"; 
     $result = $mysqli->query($query); 
 
@@ -128,17 +87,8 @@ class Model_tags extends Model
 
   public function delete($index)
   {
-   $mysqli = $this->connect_db();
-
-    $query = "DELETE FROM tags
-        WHERE post = '$index'";
-
-    $mysqli->query($query);
-
-    if ($mysqli->error){
-      error_log('Delete error (' . $mysqli->errno . ') '
-      . $mysqli->error);
-    }
+    $query = "DELETE FROM tags WHERE post = ?";
+    return $this->insert_query($query, "i", $index);
 
   }
 
