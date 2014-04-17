@@ -4,7 +4,6 @@ class Controller_admin extends Controller
     function __construct()
     {
       parent::__construct();
-      $this->model_c = new Model_admin();
     }
 
     function action_index()
@@ -15,7 +14,7 @@ class Controller_admin extends Controller
       if ($_SESSION['admin'] != 1)
         header("Location:/login");
 
-      $data = $this->model_c->get_all();
+      $data = $this->model_m->get_all();
       $data['message'] = "Хорошего дня, " . $_SESSION['admin_name']; 
       $this->view->generate('admin_view.php', 'message_view.php', 'template_view.php', $data);
 
@@ -34,13 +33,13 @@ class Controller_admin extends Controller
     
       if(isset($_POST['name'], $_POST['email'], $_POST['password']))
       {
-        $valid_name = $this->model_c->valid_name();
-        $valid_email = $this->model_c->valid_email();
-        $valid_password = $this->model_c->valid_password($valid_email['email']);
+        $valid_name = $this->model_m->valid_name();
+        $valid_email = $this->model_m->valid_email();
+        $valid_password = $this->model_m->valid_password($valid_email['email']);
 
         if ($valid_name['valid'] && $valid_email['valid'] && $valid_password['valid']){
 
-          $this->model_c->put_data($valid_name['name'], $valid_email['email'], $valid_password['password']);
+          $this->model_m->put_data($valid_name['name'], $valid_email['email'], $valid_password['password']);
           $this->view->generate('success_reg_view.php', 'message_view.php', 'template_view.php', $data);
         }else{
 
@@ -71,7 +70,7 @@ class Controller_admin extends Controller
         $this->view->generate('delete_admin_view.php', 'message_view.php', 'template_view.php', $data);
       else{
         if($_POST["delete"] == 'yes' && $index != "adminushka") 
-            $data = $this->model_c->delete($index);
+            $data = $this->model_m->delete($index);
         header("Location:/admin");
       }
     } 

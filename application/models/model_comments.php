@@ -21,36 +21,6 @@ class Model_comments extends Model
   
   }
 
- //  public function get_all() 
- //  { 
- 
- //    $mysqli = $this->connect_db();
-
- //    $query="SELECT * FROM comments"; 
- //    $result = $mysqli->query($query); 
-
- //    while($arr = $result->fetch_array())
- //    { 
- //      $data[] = $arr;
- //    }  
-
- //      $result->close(); 
-
- //   $mysqli->close(); 
- //   return $data; 
- // } 
-
-  // public function edit($data)
-  // {
-  //   $title = $data['title'];
-  //   $text = $data['text'];
-  //   $id = $data['id'];
-
-  //   $query = "UPDATE articles SET title = ?, text = ? WHERE id = ?";
-  //   return $this->insert_query($query, "ssi", $title, $text, $id);
-    
-  // }
-
   public function delete($index)
   {
 

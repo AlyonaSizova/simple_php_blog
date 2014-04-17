@@ -6,6 +6,7 @@ class Controller {
     public $model_a;
     public $model_c;
     public $model_t;
+    public $model_m;
     
     function __construct()
     {
@@ -13,6 +14,7 @@ class Controller {
         include_once "application/models/model_tags.php";
         include_once "application/models/model_articles.php";
         include_once "application/models/model_login.php";
+        include_once "application/models/model_admin.php";
 
         $this->view = new View();
         $this->model = new Model();
@@ -20,7 +22,7 @@ class Controller {
         $this->model_c = new Model_comments();
         $this->model_t = new Model_tags();
         $this->model_l = new Model_login();
-
+        $this->model_m = new Model_admin();
     }
 
    } 

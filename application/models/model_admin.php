@@ -9,30 +9,17 @@ class Model_admin extends Model
 
 	public function search_admin($name) 
     {
-    $mysqli = $this->connect_db();
-
-    $query = "SELECT * FROM members WHERE username = ?";
-    if($stmt = $mysqli->prepare($query)){
-    	$stmt->bind_param('s', $name);
-    	$stmt->execute();
-      $stmt->store_result();
-    	$count = $stmt->affected_rows;
-      $stmt->free_result();
-    	$stmt->close();
-    	return($count);
-    }
-    	return false;
+      $query = "SELECT * FROM members WHERE username = ?";
+      $stmt = $this->select_query($query, "s", $name);
+      return($stmt);
   	}
 
     public function put_data($username, $email, $password)
   {
-
-    $mysqli = $this->connect_db();
-
-    $query = "INSERT INTO members (username, email, password) VALUES ('$username', '$email', '$password')";
-    $result = $mysqli->query($query);
-    $id = $mysqli->insert_id;
-    $this->id = $id;
+    $query = "INSERT INTO members (username, email, password) VALUES (?, ?, ?)";
+    $stmt = $this->insert_query($query, "sss", $username, $email, $password);
+    
+    $id = $stmt->insert_id;
     return $id;  
   }
 
@@ -57,19 +44,10 @@ class Model_admin extends Model
 
  public function delete($index)
   {
-   $mysqli = $this->connect_db();
-
     $query = "DELETE FROM members
-        WHERE id = '$index'";
+        WHERE id = ?";
 
-    error_log($query);
-    $mysqli->query($query);
-
-    if ($mysqli->error){
-      error_log('Delete error (' . $mysqli->errno . ') '
-      . $mysqli->error);
-    }
-
+    return $this->insert_query($query, "i", $index);    
   }
 
   function valid_name()
@@ -84,7 +62,7 @@ class Model_admin extends Model
             elseif (!preg_match("/^[a-zA-Z0-9 ]*$/",$name)) {
               return array('valid' => false, 'error' => "only letters and digits allowed", 'name' => $name);
             }
-            elseif ($this->search_admin($name) != 0) {
+            elseif ($this->search_admin($name)) {
               return array('valid' => false, 'error' => "user with such login already exists", 'name' => $name);
             }
             else
@@ -118,35 +96,12 @@ class Model_admin extends Model
           return array('valid' => false, 'error' => "invalid password", 'password' => $password);
         } 
 
-  public function test_data($data)
-  {
-    $data = trim($data); // удаляет пробелы в начале и конце слова
-    $data = stripslashes($data); // удаляет экранирующие символы
-    $data = htmlspecialchars($data);
-    return $data;
-  }
+  
 
   function hash($password, $salt)
   {
   	return sha1($salt . $password);
   }
 
-  public function connect_db()
-  {
-    $blog_config = parse_ini_file("app.ini", true);
-    $db=$blog_config['db'];
-    $host=$db['host'];
-    $user=$db['user'];
-    $password=$db['pass'];
-    $db_name=$db['db'];
-    $mysqli = new mysqli($host, $user, $password, $db_name);
-
-    if ($mysqli->connect_error){
-      die('Connect error (' . $mysqli->connect_errno . ') '
-      . $mysqli->connect_error);
-    }
-
-    return $mysqli;
-
-  }
+  
 } 

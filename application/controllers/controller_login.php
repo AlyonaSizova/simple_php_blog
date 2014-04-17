@@ -5,7 +5,6 @@ class Controller_login extends Controller
 	function __construct()
     {
       parent::__construct();
-     // $this->model_l = new Model_login();
     }
 	
 	function action_index()
@@ -22,7 +21,7 @@ class Controller_login extends Controller
 		
 			if($admin){
 				$_SESSION['admin'] = 1;
-				$_SESSION['admin_name'] = $name;
+				$_SESSION['admin_name'] = $input[0];
 				header('Location:/articles');
 			}
 			else
